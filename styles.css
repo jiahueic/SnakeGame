@@ -1,0 +1,45 @@
+:root{
+    --cell-size: 50px;
+    --readjusted: calc(var(--cell-size) * 0.95)
+}
+.score {
+    height: 100px;
+    width: 600px;
+}
+.gameboard {
+    height: 500px;
+    width: 500px;
+    background-color: rgb(170,219,30);
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(10,auto);
+}
+
+.gameboard div {
+    height: var(--readjusted);
+    width: var(--readjusted);
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    position:relative;
+    
+}
+.gameboard div.dark{
+    background-color: #228c22;
+}
+.gameboard div.snake{
+    background-color: #87ceeb;
+}
+
+.gameboard div.apple{
+    background-color: red;
+}
+
+.directionbuttons {
+    margin-top: 100px;
+    margin-left:150px;
+}
