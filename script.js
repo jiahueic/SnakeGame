@@ -43,8 +43,8 @@ function startGame() {
 
 
 function replay() {
-    console.log("I am here")
     board.innerHTML = ""
+    direction = 1
     main()
     
 }
@@ -73,21 +73,36 @@ function checkBoundary() {
         clearInterval(interval)
         return false
     }
+    // add a new rule to check if the snake eats itself (when it shifts left)
+    if(initialSnake[0] + direction === initialSnake[1]){
+        alert("You have eaten yourself")
+        clearInterval(interval)
+        return false
+    }
+    // problem with down then left direction (keyboard)
     return true
      
 }
 function moveSnake() {
     var cells = document.querySelectorAll(".gameboard div")
-    var tail = initialSnake.pop() // pops the tail index of the snake
-    // remove the snake class from the class list
-    cells[tail].classList.remove("snake")
-    // unshift adds element to the start of the array
-    initialSnake.unshift(initialSnake[0] + direction)
+        var tail = initialSnake.pop() // pops the tail index of the snake
+        // remove the snake class from the class list
+        if(typeof cells[tail] !== 'undefined') {
+            cells[tail].classList.remove("snake")
+        }
+        
+        // unshift adds element to the start of the array
+        initialSnake.unshift(initialSnake[0] + direction)
+   
     // checks if the snake head eats the apple
     
+
     // if the apple is consumed, need to randomly generate a new apple again
     eatApple(initialSnake,tail)   
-    cells[initialSnake[0]].classList.add("snake")
+    if(typeof cells[initialSnake[0]] !== 'undefined') {
+        cells[initialSnake[0]].classList.add("snake")
+    }
+    
 }
 function randomApple() {
     var cells = document.querySelectorAll(".gameboard div")
@@ -128,7 +143,7 @@ function main() {
         document.addEventListener("keyup", (e) => {
             if(e.code === "ArrowLeft") {
                 //left
-                direction -= 1
+                direction = -1
             }
             else if(e.code === "ArrowUp") {
                 // up
