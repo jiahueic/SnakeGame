@@ -4,8 +4,10 @@
 }
 .score {
     height: 100px;
-    width: 600px;
+    width: 500px;
+    background-color: #0f3325;
 }
+
 .gameboard {
     height: 500px;
     width: 500px;
@@ -43,3 +45,15 @@
     margin-top: 100px;
     margin-left:150px;
 }
+
+button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 20px;
+  }

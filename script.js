@@ -1,12 +1,21 @@
+var direction = 1
 var board = document.querySelector(".gameboard")
 var left = document.querySelector(".left")
+left.addEventListener("click",function(){direction = -1})
 var right = document.querySelector(".right")
+right.addEventListener("click",function(){direction = 1})
 var up = document.querySelector(".up")
+up.addEventListener("click",function(){direction = -10})
 var down = document.querySelector(".down")
-var direction = 1
+down.addEventListener("click",() => {direction = 10})
+var playAgain = document.querySelector(".replay")
+playAgain.addEventListener("click", replay)
+var scoreBoard = document.querySelector(".score")
 var initialSnake = [2,1,0]
 var width = 10
 let score = 0
+var intervalTime = 0
+var interval = 0
 // add 100 cells to the game board
 function startGame() {
     for(let i = 0; i < 100; i++){
@@ -15,34 +24,55 @@ function startGame() {
     }
     
     var cells = document.querySelectorAll(".gameboard div")
-    console.log(cell.length)
     for(let j = 0; j < 100; j++){
         if(j % 2 != 0){
             cells[j].classList.add("dark")
         }
     }
-    
+    initialSnake = [2,1,0]
     for(let k = 0; k < initialSnake.length; k++) {
         cells[k].classList.add("snake")
     }
 
-    score.innerHTML = score
+    scoreBoard.innerHTML = '<p style="color:white; font-size:3rem;border: margin-left:20px;padding-top:20px;"> Score:'+ score + '</span>'
+    
 }
-left.addEventListener("click",() =>{direction = -1})
-right.addEventListener("click",() => {direction = 1})
-up.addEventListener("click",() =>{direction = -10})
-down.addEventListener("click",() => {direction = 10})
+
+
+
+
+
+function replay() {
+    console.log("I am here")
+    board.innerHTML = ""
+    main()
+    
+}
 
 function checkBoundary() {
     // checks if the the head of the snake is bound to hit anywhere for any of the four directions
     // the index goes from 0 to 99
-    if ((snake[0] + width >= width * width & direction === width) ||
-     (snake[0] - width <= 0 && direction === -width) ||
-     (snake[0] % width === 9 && direction === 1) || (snake[0] % width === 0 && direction === -1)) {
-        // returns true if boundary is maintained
-        // false if boundary is not maintained
+    if ((initialSnake[0] + width >= width * width && direction === width)){
+        alert("You have hit the boundary")
+        clearInterval(interval)
         return false
-     }
+    }
+    if(initialSnake[0] - width <= 0 && direction === -width){
+        alert("You have hit the boundary")
+        clearInterval(interval)
+        return false
+    }
+    console.log(initialSnake[0] % width === 9 && direction === 1)
+    if(initialSnake[0] % width === 9 && direction === 1) {
+        alert("You have hit the boundary")
+        clearInterval(interval)
+        return false
+    }
+    if(initialSnake[0] % width === 0 && direction === -1) {
+        alert("You have hit the boundary")
+        clearInterval(interval)
+        return false
+    }
     return true
      
 }
@@ -56,10 +86,7 @@ function moveSnake() {
     // checks if the snake head eats the apple
     
     // if the apple is consumed, need to randomly generate a new apple again
-    if(eatApple(initialSnake,tail)) {
-        randomApple()
-    }
-    
+    eatApple(initialSnake,tail)   
     cells[initialSnake[0]].classList.add("snake")
 }
 function randomApple() {
@@ -68,37 +95,69 @@ function randomApple() {
     do {
         randomLoc = Math.floor(Math.random() * cells.length)
     } while(cells[randomLoc].classList.contains("snake"))
-    console.log(randomLoc)
+   
     cells[randomLoc].classList.add("apple")
 
 }
 
 function eatApple(initialSnake, tail) {
-    if(initialSnake[0].classList.contains("apple")) {
-        score ++
-        score.textContent = score
-        initialSnake[0].classList.remove("apple")
-        initialSnake.push(tail)
-        initialSnake[-1].classList.add("snake")
-        return true
+    cells = document.querySelectorAll(".gameboard div")
+    // initial snake is the index, we need to get the cell of the index
+    var targetCell = cells[initialSnake[0]]
+    if(typeof targetCell !== 'undefined') {
+        if(targetCell.classList.contains("apple")) {
+      
+            score ++
+        
+            scoreBoard.innerHTML = '<p style="color:white; font-size:3rem;margin-left:20px;padding-top:20px;"> Score:'+ score + '</span>'
+            targetCell.classList.remove("apple")
+            initialSnake.push(tail)
+            // make the snake longer after eating the apple
+            lastSnakeIndex = initialSnake[initialSnake.length - 1]
+            cells[lastSnakeIndex].classList.add("snake")
+            randomApple()
+        }
     }
-    return false
+    
+    
 }
-function keyboardControl() {
 
-}
 
 function main() {
         // add an event listener for keyboard actions
-        document.addEventListener("keyup", keyboardControl)
+        document.addEventListener("keyup", (e) => {
+            if(e.code === "ArrowLeft") {
+                //left
+                direction -= 1
+            }
+            else if(e.code === "ArrowUp") {
+                // up
+                direction = -width
+            }
+            else if(e.code === "ArrowRight") {
+                // right
+                direction = 1
+            }
+            else if(e.code === "ArrowDown") {
+                // down
+                direction = width
+            }
+        })
         startGame()
         randomApple()
-        if(checkBoundary) {
-            moveSnake()
-        }
-        //move the snake if the boundary is maintained
-    
+        interval = setInterval(loop,700)
+        
+        //move the snake if the boundary is maintained   
     
 }
 
+function loop() {
+    if(checkBoundary()) {
+        moveSnake()
+    }
+
+    else{
+        clearInterval(interval)
+    }
+}
 main()
