@@ -14,7 +14,7 @@ var scoreBoard = document.querySelector(".score")
 var initialSnake = [2,1,0]
 var width = 10
 let score = 0
-var intervalTime = 0
+
 var interval = 0
 // add 100 cells to the game board
 function startGame() {
@@ -43,9 +43,14 @@ function startGame() {
 
 
 function replay() {
-    board.innerHTML = ""
-    direction = 1
-    main()
+    if(confirm("Are you sure you want to restart the game?")){
+        board.innerHTML = ""
+        direction = 1
+        // need to reset score to 0
+        score = 0
+        main()
+    }
+   
     
 }
 
@@ -173,6 +178,7 @@ function loop() {
 
     else{
         clearInterval(interval)
+        replay()
     }
 }
 main()
